@@ -298,6 +298,7 @@ const String REMAIN_DAY = 'remaining_day';
 const String PROMO_CODES = 'promo_codes';
 const String DISCOUNT = 'discount';
 const String ORDER_NOTE = 'order_note';
+const String ORDER_TYPE = 'order_type';
 
 const String SELLER_ID = 'seller_id';
 const String SELLER_NAME = 'seller_name';

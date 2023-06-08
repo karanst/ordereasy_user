@@ -458,15 +458,15 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
             : _getDrawerItem(getTranslated(context, 'MANAGE_ADD_LBL')!,
                 'assets/images/pro_address.svg'),
         //CUR_USERID == "" || CUR_USERID == null ? Container() : _getDivider(),
-        CUR_USERID == "" || CUR_USERID == null
-            ? Container()
-            : _getDrawerItem(getTranslated(context, 'MYWALLET')!,
-                'assets/images/pro_wh.svg'),
+        // CUR_USERID == "" || CUR_USERID == null
+        //     ? Container()
+        //     : _getDrawerItem(getTranslated(context, 'MYWALLET')!,
+        //         'assets/images/pro_wh.svg'),
         // CUR_USERID == "" || CUR_USERID == null ? Container() : _getDivider(),
-        CUR_USERID == "" || CUR_USERID == null
-            ? Container()
-            : _getDrawerItem(getTranslated(context, 'MYTRANSACTION')!,
-                'assets/images/pro_th.svg'),
+        // CUR_USERID == "" || CUR_USERID == null
+        //     ? Container()
+        //     : _getDrawerItem(getTranslated(context, 'MYTRANSACTION')!,
+        //         'assets/images/pro_th.svg'),
         // CUR_USERID == "" || CUR_USERID == null ? Container() :
         //   _getDrawerItem(getTranslated(context, 'CHANGE_THEME_LBL')!,
         //     'assets/images/pro_theme.svg'),
@@ -485,16 +485,16 @@ class StateProfile extends State<MyProfile> with TickerProviderStateMixin {
 
         // _getDivider(),
 
-        CUR_USERID == "" || CUR_USERID == null || !refer
-            ? Container()
-            : _getDrawerItem(getTranslated(context, 'REFEREARN')!,
-                'assets/images/pro_referral.svg'),
+        // CUR_USERID == "" || CUR_USERID == null || !refer
+        //     ? Container()
+        //     : _getDrawerItem(getTranslated(context, 'REFEREARN')!,
+        //         'assets/images/pro_referral.svg'),
         // CUR_USERID == "" || CUR_USERID == null ? Container() : _getDivider(),
         _getDrawerItem(getTranslated(context, 'CUSTOMER_SUPPORT')!,
             'assets/images/pro_customersupport.svg'),
         // _getDivider(),
-        _getDrawerItem(getTranslated(context, 'ABOUT_LBL')!,
-            'assets/images/pro_aboutus.svg'),
+        // _getDrawerItem(getTranslated(context, 'ABOUT_LBL')!,
+        //     'assets/images/pro_aboutus.svg'),
         // _getDivider(),
         _getDrawerItem(getTranslated(context, 'CONTACT_LBL')!,
             'assets/images/pro_aboutus.svg'),

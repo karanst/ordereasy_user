@@ -121,7 +121,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     controller.addListener(_scrollListener);
-    getPosts("0");
+    getPosts('${selectedTab}');
 
     buttonController = new AnimationController(
         duration: new Duration(milliseconds: 2000), vsync: this);
@@ -146,7 +146,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
           setState(() {
             isLoadingmore = true;
 
-            if (offset < total) getPosts("0");
+            if (offset < total) getPosts('${selectedTab}');
           });
       }
     }
@@ -202,7 +202,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
                 if (_isNetworkAvail) {
                   offset = 0;
                   total = 0;
-                  getPosts("0");
+                  getPosts('${selectedTab}');
                 } else {
                   await buttonController!.reverse();
                   if (mounted) setState(() {});
@@ -756,80 +756,274 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
     return dots;
   }
 
+  Widget postCard(int i) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15)
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8, top: 4, bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  tempList[i].endDate == "" || tempList[i].endDate == null ?
+                  ""
+                      : "Expiry Date : ${tempList[i].endDate}", style: TextStyle(
+                    color: Colors.red
+                ),),
+                // Row(
+                //   children: [
+                //     InkWell(
+                //       onTap: (){
+                //         Navigator.push(context, MaterialPageRoute(builder: (context) => EditPostScreen(
+                //             data: tempList[i]
+                //         )));
+                //       },
+                //       child: Card(
+                //         elevation: 2,
+                //         shape: RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.circular(40)
+                //         ),
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(5.0),
+                //           child: Icon(Icons.edit, color: primary,),
+                //         ),
+                //       ),
+                //     ),
+                //     InkWell(
+                //       onTap: (){
+                //         showDialog(
+                //             context: context,
+                //             barrierDismissible: false,
+                //             builder: (BuildContext context) {
+                //               return AlertDialog(
+                //                 title: Text("Confirm Delete"),
+                //                 content: Text("Are you sure you want to Delete?"),
+                //                 actions: <Widget>[
+                //                   ElevatedButton(
+                //                     style: ElevatedButton.styleFrom(primary: primary),
+                //                     child: Text("YES", style: TextStyle(color: white),),
+                //                     onPressed: () {
+                //                       deletePost(tempList[i].id.toString());
+                //                       Navigator.pop(context);
+                //                     },
+                //                   ),
+                //                   ElevatedButton(
+                //                     style: ElevatedButton.styleFrom(primary: primary),
+                //                     child: Text("NO", style: TextStyle(color: white),),
+                //                     onPressed: () {
+                //                       Navigator.pop(context);
+                //                     },
+                //                   )
+                //                 ],
+                //               );
+                //             });
+                //       },
+                //       child: Card(
+                //         elevation: 2,
+                //         shape: RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.circular(40)
+                //         ),
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(5.0),
+                //           child: Icon(Icons.delete_forever, color: primary,),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // )
+              ],
+            ),
+          ),
+          tempList[i].images!.length > 1
+              ? Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: colors.primary),
+                borderRadius: BorderRadius.circular(10)
+            ),
+            child: Column(
+              children: [
+                CarouselSlider(
+                  options: CarouselOptions(
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _currentPost = index;
+                      });
+                    },
+                    height: 200.0,
+                    enlargeCenterPage: false,
+                    autoPlay: false,
+                    aspectRatio: 1,
+                    // 16 / 9,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enableInfiniteScroll: false,
+                    autoPlayAnimationDuration:
+                    Duration(milliseconds: 1000),
+                    viewportFraction: 1.0,
+                  ),
+                  items:  tempList[i].images!.map((item) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            // margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: const BoxDecoration(),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height *
+                                  0.35,
+                              width: MediaQuery.of(context).size.width,
+                              child: item.isEmpty ||  tempList[i].images![0].toString() == imageUrl
+                                  ? Image.asset(
+                                'assets/placeholder.png',
+                                // widget.snap['postUrl'],
+                                fit: BoxFit.cover,
+                              )
+                                  : Image.network(
+                                item,
+                                // widget.snap['postUrl'],
+                                fit: BoxFit.cover,
+                              ),
+                            ));
+                      },
+                    );
+                  }).toList(),
+                ),
 
-  Widget postCard(int i){
-    return Column(
-      children: [
-        tempList[i].images!.length > 1
-            ? CarouselSlider(
-          options: CarouselOptions(
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentPost = index;
-              });
-            },
-            height: 200.0,
-            enlargeCenterPage: false,
-            autoPlay: false,
-            aspectRatio: 1,
-            // 16 / 9,
-            autoPlayCurve: Curves.fastOutSlowIn,
-            enableInfiniteScroll: false,
-            autoPlayAnimationDuration:
-            Duration(milliseconds: 1000),
-            viewportFraction: 1.0,
-          ),
-          items:  tempList[i].images!.map((item) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                    width: MediaQuery.of(context).size.width,
-                    // margin: EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: const BoxDecoration(),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height *
-                          0.35,
-                      width: MediaQuery.of(context).size.width,
-                      child: item.isEmpty ||  tempList[i].images![0].toString() == imageUrl
-                          ? Image.asset(
-                        'assets/placeholder.png',
-                        // widget.snap['postUrl'],
-                        fit: BoxFit.cover,
-                      )
-                          : Image.network(
-                        item,
-                        // widget.snap['postUrl'],
-                        fit: BoxFit.cover,
-                      ),
-                    ));
-              },
-            );
-          }).toList(),
-        )
-            : SizedBox(
-          height: MediaQuery.of(context).size.height * 0.35,
-          width: double.infinity,
-          child:  tempList[i].images!.isEmpty ||  tempList[i].images![0].toString() == imageUrl
-              ? Image.asset(
-            'assets/placeholder.png',
-            // widget.snap['postUrl'],
-            fit: BoxFit.cover,
+              ],
+            ),
           )
-              : Image.network(
-            tempList[i].images![0].toString(),
-            // widget.snap['postUrl'],
-            fit: BoxFit.cover,
+              : Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: colors.primary),
+                borderRadius: BorderRadius.circular(10)
+            ),
+            height: MediaQuery.of(context).size.height * 0.35,
+            width: double.infinity,
+            child: Container(
+              child:  tempList[i].images!.isEmpty || tempList[i].images![0].toString() == imageUrl
+                  ? Image.asset(
+                'assets/placeholder.png',
+                // widget.snap['postUrl'],
+                fit: BoxFit.cover,
+              )
+                  : Image.network(
+                tempList[i].images![0].toString(),
+                // widget.snap['postUrl'],
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
-        tempList[i].images!.length > 1 ?
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _buildDots(i),
-        )
-            : const SizedBox.shrink(),
-      ],
+          tempList[i].images!.length > 1 ?
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _buildDots(i),
+          )
+              : const SizedBox.shrink(),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tempList[i].name.toString(), style: TextStyle(
+                    color: colors.blackTemp
+                ),),
+                Text(tempList[i].text.toString(), style: TextStyle(
+                    color: colors.blackTemp
+                ),),
+
+                Row(
+                  children: [
+                    Text('₹ ${tempList[i].oldPrice.toString()}',style: TextStyle(color: Colors.red, decoration: TextDecoration.lineThrough),),
+                    Text(' ₹ ${tempList[i].newPrice.toString()}',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: colors.blackTemp)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+        ],
+      ),
     );
   }
+  // Widget postCard(int i){
+  //   return Column(
+  //     children: [
+  //       tempList[i].images!.length > 1
+  //           ? CarouselSlider(
+  //         options: CarouselOptions(
+  //           onPageChanged: (index, reason) {
+  //             setState(() {
+  //               _currentPost = index;
+  //             });
+  //           },
+  //           height: 200.0,
+  //           enlargeCenterPage: false,
+  //           autoPlay: false,
+  //           aspectRatio: 1,
+  //           // 16 / 9,
+  //           autoPlayCurve: Curves.fastOutSlowIn,
+  //           enableInfiniteScroll: false,
+  //           autoPlayAnimationDuration:
+  //           Duration(milliseconds: 1000),
+  //           viewportFraction: 1.0,
+  //         ),
+  //         items:  tempList[i].images!.map((item) {
+  //           return Builder(
+  //             builder: (BuildContext context) {
+  //               return Container(
+  //                   width: MediaQuery.of(context).size.width,
+  //                   // margin: EdgeInsets.symmetric(horizontal: 5.0),
+  //                   decoration: const BoxDecoration(),
+  //                   child: SizedBox(
+  //                     height: MediaQuery.of(context).size.height *
+  //                         0.35,
+  //                     width: MediaQuery.of(context).size.width,
+  //                     child: item.isEmpty ||  tempList[i].images![0].toString() == imageUrl
+  //                         ? Image.asset(
+  //                       'assets/placeholder.png',
+  //                       // widget.snap['postUrl'],
+  //                       fit: BoxFit.cover,
+  //                     )
+  //                         : Image.network(
+  //                       item,
+  //                       // widget.snap['postUrl'],
+  //                       fit: BoxFit.cover,
+  //                     ),
+  //                   ));
+  //             },
+  //           );
+  //         }).toList(),
+  //       )
+  //           : SizedBox(
+  //         height: MediaQuery.of(context).size.height * 0.35,
+  //         width: double.infinity,
+  //         child:  tempList[i].images!.isEmpty ||  tempList[i].images![0].toString() == imageUrl
+  //             ? Image.asset(
+  //           'assets/placeholder.png',
+  //           // widget.snap['postUrl'],
+  //           fit: BoxFit.cover,
+  //         )
+  //             : Image.network(
+  //           tempList[i].images![0].toString(),
+  //           // widget.snap['postUrl'],
+  //           fit: BoxFit.cover,
+  //         ),
+  //       ),
+  //       tempList[i].images!.length > 1 ?
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: _buildDots(i),
+  //       )
+  //           : const SizedBox.shrink(),
+  //     ],
+  //   );
+  // }
 
   _setFav(int index, Product model) async {
     _isNetworkAvail = await isNetworkAvailable();
@@ -1072,14 +1266,14 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
     }
   }
 
-  void getPosts(String top) {
+  void getPosts(String type) {
     //_currentRangeValues.start.round().toString(),
     // _currentRangeValues.end.round().toString(),
     Map parameter = {
-      SELLER_ID : '1281'
-      //widget.sellerId
+      SELLER_ID : widget.sellerId,
+      'type': type.toString()
     };
-
+    print("this is post request $parameter");
     apiBaseHelper.postAPICall(getPostsApi, parameter).then((getdata) {
       bool error = getdata["error"];
       String? msg = getdata["message"];
@@ -1901,7 +2095,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
                                 offset = 0;
                                 productList.clear();
                               });
-                            getPosts("0");
+                            getPosts('${selectedTab}');
                             Navigator.pop(context, 'option 1');
                           }),
                       InkWell(
@@ -1935,7 +2129,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
                                 offset = 0;
                                 productList.clear();
                               });
-                            getPosts("0");
+                            getPosts('${selectedTab}');
                             Navigator.pop(context, 'option 2');
                           }),
                       InkWell(
@@ -1969,7 +2163,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
                                 offset = 0;
                                 productList.clear();
                               });
-                            getPosts("0");
+                            getPosts('${selectedTab}');
                             Navigator.pop(context, 'option 3');
                           }),
                       InkWell(
@@ -2003,7 +2197,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
                                 offset = 0;
                                 productList.clear();
                               });
-                            getPosts("0");
+                            getPosts('${selectedTab}');
                             Navigator.pop(context, 'option 4');
                           }),
                     ]),
@@ -2021,7 +2215,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
           setState(() {
             isLoadingmore = true;
 
-            if (offset < total) getPosts("0");
+            if (offset < total) getPosts('${selectedTab}');
           });
       }
     }
@@ -2107,59 +2301,75 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
         total = 0;
         productList.clear();
       });
-    getPosts("0");*/ /*
+    getPosts('${selectedTab}');*/ /*
 
   }*/
   int selectedTab = 1 ;
 
   tabBarView() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          InkWell(
-            onTap: (){
-              setState(() {
-                selectedTab = 1;
-              });
-              getPosts("1");
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(
-                border: Border.all(color: colors.primary,),
-                color: selectedTab  == 1 ? colors.primary : colors.whiteTemp,
-                borderRadius: BorderRadius.circular(10)),
-              child: Text("Current Posts", style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-                color: selectedTab  == 1 ? colors.whiteTemp : colors.primary,
-              ),),
-            ),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0, bottom: 10),
+        child: Container(
+          width: 242,
+          decoration: BoxDecoration(
+            border: Border.all(color: colors.primary),
+            borderRadius: BorderRadius.circular(12),
+            color: colors.whiteTemp,
           ),
-          const SizedBox(width: 10,),
-          InkWell(
-            onTap: (){
-              setState(() {
-                selectedTab = 2;
-              });
-              getPosts("2");
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              decoration: BoxDecoration(
-                  border: Border.all(color: colors.primary,),
-                  color: selectedTab  == 2 ? colors.primary : colors.whiteTemp,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Text("All Posts", style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-                color: selectedTab  == 2 ? colors.whiteTemp : colors.primary,
-              ),),
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: (){
+                  setState(() {
+                    selectedTab = 1;
+                  });
+                  getPosts(selectedTab.toString());
+                },
+                child: Container(
+                  width: 120,
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    // border: Border.all(color: primary,),
+                      color: selectedTab  == 1 ? colors.primary : colors.whiteTemp,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text("Current Posts", style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: selectedTab  == 1 ? colors.whiteTemp : colors.primary,
+                    ),),
+                  ),
+                ),
+              ),
+              // const SizedBox(width: 10,),
+              InkWell(
+                onTap: (){
+                  setState(() {
+                    selectedTab = 2;
+                  });
+                 getPosts(selectedTab.toString());
+                },
+                child: Container(
+                  width: 120,
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    // border: Border.all(color: primary,),
+                      color: selectedTab  == 2 ? colors.primary : colors.whiteTemp,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text("All Posts", style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: selectedTab  == 2 ? colors.whiteTemp : colors.primary,
+                    ),),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -2613,7 +2823,7 @@ class StatePosts extends State<PostsScreen> with TickerProviderStateMixin {
                               offset = 0;
                               productList.clear();
                             });
-                          getPosts("0");
+                          getPosts('${selectedTab}');
                           Navigator.pop(context, 'Product Filter');
                         }),
                   ]),

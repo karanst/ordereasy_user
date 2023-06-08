@@ -165,8 +165,8 @@ class _SaleState extends State<Sale>
                       //               storeDesc: sellerList[index]
                       //                   .store_description,
                       //             )));
-                      if(recentSearchModel!.date![index].online == "1"){
-                        print("working here");
+                      // if(recentSearchModel!.date![index].online == "1"){
+                      //   print("working here");
                         // Navigator.push(
                         //     context,
                         //     MaterialPageRoute(
@@ -192,9 +192,9 @@ class _SaleState extends State<Sale>
                                   sellerData: recentSearchModel!.date![index],
                                   showAll: true,
                                 )));
-                      } else {
-                        setSnackbar("Store is Close!!", context);
-                      }
+                      // } else {
+                      //   setSnackbar("Store is Close!!", context);
+                      // }
                     },
                     child: Column(
                       mainAxisAlignment:
@@ -289,17 +289,17 @@ class _SaleState extends State<Sale>
                                                   child: Padding(
                                                       padding: EdgeInsets.only(bottom: 4),
                                                       child: Icon(Icons.delete,color: Colors.red,))),
-                                              recentSearchModel!.date![index].online == "1"
-                                                  ? Text("Open",
-                                                style: TextStyle(
-                                                    color: Colors.green
-                                                ),
-                                              )
-                                                  : Text("Close",
-                                                style: TextStyle(
-                                                    color: Colors.red
-                                                ),
-                                              ),
+                                              // recentSearchModel!.date![index].online == "1"
+                                              //     ? Text("Open",
+                                              //   style: TextStyle(
+                                              //       color: Colors.green
+                                              //   ),
+                                              // )
+                                              //     : Text("Close",
+                                              //   style: TextStyle(
+                                              //       color: Colors.red
+                                              //   ),
+                                              // ),
                                             ],
                                           )
                                       ),

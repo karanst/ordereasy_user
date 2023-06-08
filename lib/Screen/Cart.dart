@@ -210,6 +210,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
     );
   }
 
+  int deliveryTypeIndex = 1;
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -1272,6 +1273,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
         ));
   }
 
+  String? deliveryType;
+
   Future<void> _getCart(String save) async {
     _isNetworkAvail = await isNetworkAvailable();
 
@@ -1279,6 +1282,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
       try {
         var parameter = {USER_ID: CUR_USERID, SAVE_LATER: save};
 
+        print("this is get cart param $parameter and $getCartApi");
         Response response =
         await post(getCartApi, body: parameter, headers: headers)
             .timeout(Duration(seconds: timeOut));
@@ -1292,8 +1296,9 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
           oriPrice = double.parse(getdata[SUB_TOTAL]);
 
           taxPer = double.parse(getdata[TAX_PER]);
+          deliveryType = data[0]['seller_oders_type'];
 
-          totalPrice = delCharge + oriPrice;
+              totalPrice = delCharge + oriPrice;
           List<SectionModel> cartList = (data as List)
               .map((data) => new SectionModel.fromCart(data))
               .toList();
@@ -1307,6 +1312,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
 
           for (int i = 0; i < cartList.length; i++)
             _controller.add(new TextEditingController());
+
+
         } else {
           if (msg != 'Cart Is Empty !') setSnackbar(msg!, _scaffoldKey);
         }
@@ -2910,7 +2917,8 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
           ADD_ID: selAddress,
           ISWALLETBALUSED: isUseWallet! ? "1" : "0",
           WALLET_BAL_USED: usedBal.toString(),
-          ORDER_NOTE: noteC.text
+          ORDER_NOTE: noteC.text,
+          ORDER_TYPE : deliveryType == 'take_away'? "take_away" : deliveryTypeIndex == 1 ? "take_away" : "delivery"
         };
 
         if (isTimeSlot!) {
@@ -3530,7 +3538,9 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
     showGeneralDialog(
         barrierColor: Theme.of(context).colorScheme.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
-          return Transform.scale(
+          return StatefulBuilder(
+              builder: (context, setState) {
+           return Transform.scale(
             scale: a1.value,
             child: Opacity(
                 opacity: a1.value,
@@ -3560,6 +3570,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                         Padding(
                           padding: EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(
@@ -3735,6 +3746,87 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                                       hintText: getTranslated(context, 'NOTE'),
                                     ),
                                   )),
+                              Text(
+                                getTranslated(context, 'SELECT_DELIVERY_TYPE')!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle2!
+                                    .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .lightBlack2),
+                              ),
+                              const SizedBox(height: 10,),
+                              deliveryType == "take_wa" ?
+                              Container(
+                                height:  40,
+                                decoration: BoxDecoration(
+                                    color: deliveryTypeIndex == 1 ? colors.primary.withOpacity(0.4) :  Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: deliveryTypeIndex == 1 ? Theme.of(context).colorScheme.fontColor : colors.primary,)
+                                ),
+                                child: Center(
+                                    child: Text(getTranslated(context, "TAKEAWAY")!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2!
+                                          .copyWith(
+                                          color: Theme.of(context).colorScheme.fontColor),)),
+                              )
+                                  : Padding(
+                                    padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                    child: Column(
+                                children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: InkWell(
+                                        onTap: (){
+                                          setState(() {
+                                            deliveryTypeIndex = 1 ;
+                                          });
+                                        },
+                                        child: Container(
+                                          height:  40,
+                                          decoration: BoxDecoration(
+                                              color: deliveryTypeIndex == 1 ? colors.primary.withOpacity(0.4) :  Colors.white,
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(color: deliveryTypeIndex == 1 ? Theme.of(context).colorScheme.fontColor : colors.primary,)
+                                          ),
+                                          child: Center(
+                                              child: Text(getTranslated(context, "TAKEAWAY")!,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2!
+                                                    .copyWith(
+                                                    color: Theme.of(context).colorScheme.fontColor),)),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          deliveryTypeIndex = 2 ;
+                                        });
+                                      },
+                                      child: Container(
+                                        height:  40,
+                                        decoration: BoxDecoration(
+                                            color: deliveryTypeIndex == 2 ? colors.primary.withOpacity(0.4) :  Colors.white,
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: deliveryTypeIndex == 2 ? Theme.of(context).colorScheme.fontColor : colors.primary,)
+                                        ),
+                                        child: Center(
+                                            child: Text(getTranslated(context, "DELIVERY")!,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle2!
+                                                  .copyWith(
+                                                  color: Theme.of(context).colorScheme.fontColor),)),
+                                      ),
+                                    )
+                                ],
+                              ),
+                                  )
                             ],
                           ),
                         ),
@@ -3767,6 +3859,7 @@ class StateCart extends State<Cart> with TickerProviderStateMixin {
                 )),
           );
         },
+          );},
         transitionDuration: Duration(milliseconds: 200),
         barrierDismissible: false,
         barrierLabel: '',

@@ -101,6 +101,8 @@
   "SUBTOTAL": "תת סך הכל",
   "QUANTITY_LBL": "כמות",
   "ADDADDRESS": "הוסף כתובת חדשה",
+  "SELECT_DELIVERY_TYPE" : "בחר סוג משלוח",
+  "TAKEAWAY": "להסיר",
   "NAME_LBL": "שֵׁם",
   "ALT_MOB": "מספר נייד חלופי",
   "STATE_LBL": "מדינה",

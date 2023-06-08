@@ -4,6 +4,7 @@ import 'package:eshop_multivendor/Helper/Color.dart';
 import 'package:eshop_multivendor/Helper/String.dart';
 import 'package:eshop_multivendor/Model/newSellerModel.dart';
 import 'package:eshop_multivendor/Screen/QrScanner.dart';
+import 'package:eshop_multivendor/Screen/dashboard_restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../Helper/Constant.dart';
@@ -52,7 +53,9 @@ class _ScannerPageState extends State<ScannerPage> {
         checkResult = jsonResponse;
         // });
         print("ooooooooooo  ${checkResult!.date![0].userId}");
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SubCategory(title: widget.title.toString(),sellerId: checkResult!.date![0].userId.toString(),sellerData: checkResult!.date![0],)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+            RestaurantDashboard(title: widget.title.toString(),sellerId: checkResult!.date![0].userId.toString(),sellerData: checkResult!.date![0],
+            showAll: false,)));
       }
       else{
         var snackBar = SnackBar(
@@ -119,7 +122,7 @@ class _ScannerPageState extends State<ScannerPage> {
                       TextFormField(
                         controller: codeController,
                         keyboardType: TextInputType.number,
-                        maxLength: 6,
+                        maxLength: 9,
                         decoration: InputDecoration(
                           hintText: "${getTranslated(context, 'EnterPincodeHere')}",
                           counterText: "",
@@ -133,7 +136,7 @@ class _ScannerPageState extends State<ScannerPage> {
                       MaterialButton(onPressed: (){
                        if(codeController.text.isEmpty){
                          var snackBar = SnackBar(
-                           content: Text('Enter correct code'),
+                           content: Text('Enter valid code!'),
                          );
                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                        }

@@ -118,6 +118,8 @@
   "CONFIRM_ORDER": "Confirm Order",
   "CONFIRM": "Confirm",
   "CANCEL": "Cancel",
+  "SELECT_DELIVERY_TYPE": "Select Delivery Type",
+  "TAKEAWAY": "Take Away",
   "ORDER_PLACED": "Order Placed",
   "ORD_PLC": "Success!",
   "ORD_PLC_SUCC": "Your order will be delivered soon.\nThank you for choosing our app!",

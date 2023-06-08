@@ -118,6 +118,8 @@
   "CONFIRM_ORDER" : "تأكيد الطلب ",
   "CONFIRM" : "تأكيد ",
   "CANCEL" : "الغاء ",
+  "SELECT_DELIVERY_TYPE": "حدد نوع التسليم",
+  "TAKEAWAY": "يبعد",
   "ORDER_PLACED" : "طلب تم وضعه ",
   "ORD_PLC" : "نجاح ! ",
   "ORD_PLC_SUCC" : "سيتم تسليم الطلب الخاص بك قريبا. \nشكرا لاختيارك تطبيقنا ",
